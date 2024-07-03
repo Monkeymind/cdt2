@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget,QHBoxLayout,QComboBox,QLabel,QTextEdit,QLineEdit,QFormLayout 
 from PySide6.QtCore import Qt
 
-from basicFormat import Window
+from baseFrame import Window
 import sys
 import qdarktheme
 app= QApplication(sys.argv)
