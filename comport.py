@@ -1,10 +1,16 @@
 import serial.tools.list_ports
-from PySide6.QtWidgets import  QFrame,QTextEdit,QGroupBox,QComboBox,QLabel,QGridLayout,QMessageBox,QPushButton
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import  QLineEdit,QGroupBox,QComboBox,QLabel,QGridLayout,QPushButton
 
-class comPort(QGroupBox):
-    def __init__(self):
+
+class comPortConfig(QGroupBox):
+    def __init__(self,name):
         super().__init__()
-        self.setTitle('ComPort')
+
+        self.comPort=None
+
+        self.titleName=name
+        self.setTitle(self.titleName)
         self.bserUpdate = QPushButton(text="Update",parent=self)
         self.bserUpdate.setFixedSize(100, 30)
         self.SerList=QComboBox()
@@ -21,16 +27,25 @@ class comPort(QGroupBox):
         self.serHlayOut.addWidget(self.SerList,0,1)
         self.serHlayOut.addWidget(self.lBaudrate,0,2)
         self.serHlayOut.addWidget(self.bPortConnect,0,3)
-       
+
+        self.commandText=QLabel(text="Command:",parent=self)
+        self.deviceCommand=QLineEdit()
+        self.deviceCommand.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.deviceCommand.setFixedSize(500,30)
+       # self.deviceCommand.setReadOnly(True)
         
-        # self.serHlayOut=QHBoxLayout()
-        # self.serHlayOut.addWidget(self.bserUpdate)
-        # self.serHlayOut.addWidget(self.SerList)
-        # self.serHlayOut.addWidget(self.lBaudrate)
-        # self.serHlayOut.addWidget(self.bPortConnect)
+        self.send = QPushButton(text="Send",parent=self)
+        self.send.setFixedSize(100, 30)
         
 
+        self.serHlayOut.addWidget(self.commandText,1,0)
+        self.serHlayOut.addWidget(self.deviceCommand,1,1)
+        self.serHlayOut.addWidget(self.send,1,2)
+
+        #self.comPort=None
         self.portlist =serial.tools.list_ports.comports()
+       # print(self.portlist)
+        print("---------"+name+"------------")
         for comNum in range(len(self.portlist)):
             print(str(comNum+1)+"- "+str(self.portlist[comNum]))
             self.SerList.addItem(str(self.portlist[comNum]))
@@ -44,17 +59,20 @@ class comPort(QGroupBox):
             self.SerList.addItem(str(self.portlist[comNum]))
     
     def portConnect(self):
-        self.portConn="a"
+        #self.comPort="a"
         if self.bPortConnect.text() == "Connect":
             self.index=self.SerList.currentIndex()
             print(str(self.index))
             try:
-                self.portConn=serial.Serial(port=(self.portlist[self.index].device),timeout=.1)
-                #self.portConn.open()
-                
+                #self.comPort=serial.Serial('com17',9600,timeout=.1,parity="N",stopbits=1)
+                self.comPort=serial.Serial(port=(self.portlist[self.index].device),timeout=.01)
+                #self.comPort.open()
+                print(self.comPort.name)
                 self.bPortConnect.setText("Disconnect")
                 self.bPortConnect.setStyleSheet("background-color: red")
+                
                 print(self.portlist[self.index].device +"- Port Connected")
+                
                 
             except:
                 print("Port Connect Func error")
@@ -62,19 +80,18 @@ class comPort(QGroupBox):
                 
 
         else:
-           # comPort.portConn.close()
+            self.comPort.close()
+            self.comPort=None
             self.bPortConnect.setText("Connect")
             self.bPortConnect.setStyleSheet("background-color: green")  
 
-    def porDisconnect(self):
-        self.portConn.close()
+    def portDisconnect(self):        
+        self.comPort.close()
+        
         self.bPortConnect.setText("Connect")
         self.bPortConnect.setStyleSheet("background-color: green")
+        
                         
 
 
-
-
-
-
-
+   

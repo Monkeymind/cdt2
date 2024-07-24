@@ -8,8 +8,8 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('E:\\pyQt_7\\icon_1\\egse.ico', '.')],
-    hiddenimports=[],
+    datas=[],
+    hiddenimports=['pyvisa_py'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['egse.ico'],
+    icon=['ate.ico'],
 )
